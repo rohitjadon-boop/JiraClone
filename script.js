@@ -1,31 +1,35 @@
-let input = document.getElementById('input-section');
 let click = 0;
+let deleteMode = false;
 
 /**************************************Creating Unique Id Using ShortUniueId***********************/
+
 var uid = new ShortUniqueId();
 
 /***********************Add Cross Container  Box Selectors*****************************************/
+
 let lockContainer = document.querySelector('.lock-container');
 let unlockContainer = document.querySelector('.unlock-container');
 let plusContainer = document.querySelector('.plus-container');
-let minusContainer = document.querySelector('.minus-container');
+let deleteContainer = document.querySelector('.multiply-container');
 
-/******************************Input Event Listener*************************************************/
+(function init() {
+  let currentData = JSON.parse(localStorage.getItem('tasks')) || [];
+  console.log(currentData.length);
+  for (let i = 0; i < currentData.length; i++) {
+    createBox(currentData[i].id, currentData[i].value, currentData[i].color, false);
+  }
+})();
 
+/******************************Adding Content To Main Div Event Listener*******************************/
+
+let input = document.getElementById('input-section');
 input.addEventListener('keydown', function (e) {
   if (e.key == 'Enter') {
-    let uuid = uid();
+    let id = uid();
     let value = input.value;
-    console.log(value);
     input.value = "";
-    let div = document.getElementsByClassName('main-container');
-    let newDiv = document.createElement('div');
-    newDiv.innerHTML = innerHtml();
-    div[0].appendChild(newDiv);
-    let textDiv = document.getElementsByClassName('text');
-    textDiv[textDiv.length - 1].textContent = value;
-    let idDiv = document.getElementsByClassName('task-id');
-    idDiv[idDiv.length - 1].textContent = `#${uuid}`;
+    createBox(id, value, 'black', true);
+    getAndAddToLocalStorage(id, 'black', value, false);
   }
 })
 
@@ -51,6 +55,8 @@ div.addEventListener('click', function (e) {
         headerDiv.style.backgroundColor = 'lightgreen';
         break;
     }
+    console.log(e.target.nextElementSibling);
+    updateColorInLocalStorage(e.target.nextElementSibling.querySelector('.task-id').textContent, headerDiv.style.backgroundColor);
   }
 });
 
@@ -114,3 +120,90 @@ function innerHtml() {
 </div>`
 }
 
+/************************************Box Shadow For Delete Button**************************************** */
+
+deleteContainer.addEventListener('click', function (e) {
+  console.log(deleteMode);
+  deleteMode = !deleteMode;
+  if (deleteMode == true) {
+    deleteContainer.classList.add('boxShadow');
+  }
+  else {
+    deleteContainer.classList.remove('boxShadow');
+  }
+})
+
+
+/******************************Adding TO Local Storage**************************************************** */
+
+
+function getAndAddToLocalStorage(id, color, value) {
+  console.log('Inside');
+  let tasksString = localStorage.getItem('tasks');
+  let tasksArr = JSON.parse(tasksString) || [];
+  let taskObj = {
+    color: color,
+    id: `#${id}`,
+    value: value,
+  }
+  tasksArr.push(taskObj);
+  localStorage.setItem('tasks', JSON.stringify(tasksArr));
+}
+
+
+function createBox(id, value, color, flag) {
+  console.log(value);
+  let div = document.getElementsByClassName('main-container');
+  let newDiv = document.createElement('div');
+  newDiv.innerHTML = innerHtml(color);
+
+
+  /******************************Adding Event Listener To Delete The Div****************************** */
+
+  newDiv.addEventListener('click', function () {
+    if (deleteMode === true) {
+      newDiv.remove();
+      let taskString = localStorage.getItem('tasks');
+      let tasksArr = JSON.parse(taskString);
+      let updatedArr = tasksArr.filter((ob) => {
+        return ob.id !== `#${id}`;
+      });
+      console.log(updatedArr);
+      updatedArr.length > 0 ? localStorage.setItem('tasks', JSON.stringify(updatedArr)) : localStorage.clear();
+    }
+  });
+
+  div[0].appendChild(newDiv);
+  let textDiv = document.getElementsByClassName('text');
+  textDiv[textDiv.length - 1].textContent = value;
+  let idDiv = document.getElementsByClassName('task-id');
+  idDiv[idDiv.length - 1].textContent = flag ? `#${id}` : `${id}`;
+
+  if(flag==false){
+    let header=newDiv.querySelector('.task-header');
+    header.style.backgroundColor=color;
+  }
+
+
+};
+
+
+function updateColorInLocalStorage(id, color) {
+  console.log(color);
+  let taskArr = JSON.parse(localStorage.getItem('tasks'));
+  let updatedArr = taskArr.map((ob) => {
+    if (ob.id === id) {
+      return {
+        ...ob,
+        color: color,
+      }
+    }
+    else {
+      return {
+        ...ob,
+      }
+    }
+  });
+  console.log(updatedArr);
+  localStorage.setItem('tasks', JSON.stringify(updatedArr));
+}
