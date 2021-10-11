@@ -37,15 +37,15 @@ plusContainer.addEventListener('click', function (e) {
   }
 });
 
+/**************************Fetching Data From Local Storage******************************** */
 
-
-(function init() {
+function init() {
   let currentData = JSON.parse(localStorage.getItem('tasks')) || [];
   console.log(currentData.length);
   for (let i = 0; i < currentData.length; i++) {
     createBox(currentData[i].id, currentData[i].value, currentData[i].color, false);
   }
-})();
+};
 
 /******************************Adding Content To Main Div Event Listener*******************************/
 
@@ -166,6 +166,7 @@ function getAndAddToLocalStorage(id, color, value) {
   localStorage.setItem('tasks', JSON.stringify(tasksArr));
 }
 
+/*****************************Creating The Box****************************************************** */
 
 function createBox(id, value, color, flag) {
   console.log('Times');
@@ -175,7 +176,7 @@ function createBox(id, value, color, flag) {
   newDiv.innerHTML = innerHtml(color);
   
   
-  /******************************Adding Event Listener To Delete The Div****************************** */
+/******************************Adding Event Listener To Delete The Div****************************** */
   div[0].appendChild(newDiv);
   
   deleteBox(newDiv)
@@ -193,6 +194,8 @@ function createBox(id, value, color, flag) {
   
 
 };
+
+/********************Updating Color In Local Storage********************************************** */
 
 function updateColorInLocalStorage(id, color) {
   console.log(color);
@@ -214,7 +217,7 @@ function updateColorInLocalStorage(id, color) {
   localStorage.setItem('tasks', JSON.stringify(updatedArr));
 }
 
-
+/***********************Function To Update The  Text************************************************ */
 
 function updateText(newDiv) {
   newDiv.addEventListener('click', function (e) {
@@ -234,6 +237,8 @@ function updateText(newDiv) {
   });
 }
 
+/*************************************Function TO Delete The Box****************************************** */
+
 function deleteBox(newDiv) {
   newDiv.addEventListener('click', function () {
     if (deleteMode === true) {
@@ -248,3 +253,5 @@ function deleteBox(newDiv) {
     }
   });
 }
+
+init();
