@@ -1,6 +1,6 @@
 let click = 0;
 let deleteMode = false;
-
+let modaleFlag = false;
 /**************************************Creating Unique Id Using ShortUniueId***********************/
 
 var uid = new ShortUniqueId();
@@ -11,6 +11,33 @@ let lockContainer = document.querySelector('.lock-container');
 let unlockContainer = document.querySelector('.unlock-container');
 let plusContainer = document.querySelector('.plus-container');
 let deleteContainer = document.querySelector('.multiply-container');
+let modale = document.querySelector('.modale');
+
+modale.addEventListener('keydown', function(e) {
+  if(e.key==='Enter'){
+    let value=e.target.value;
+    e.target.value="";
+    let id=uid();
+    console.log(id);
+    createBox(id, value, 'black', true);
+    getAndAddToLocalStorage(id, 'black', value);
+    modale.style.display='none';
+    modaleFlag=false;
+  }
+})
+
+plusContainer.addEventListener('click', function (e) {
+  if(modaleFlag==false){
+    modale.style.display='flex';
+    modaleFlag=true;
+  }
+  else{
+   modale.style.display='none';
+   modaleFlag=false;
+  }
+});
+
+
 
 (function init() {
   let currentData = JSON.parse(localStorage.getItem('tasks')) || [];
@@ -21,17 +48,6 @@ let deleteContainer = document.querySelector('.multiply-container');
 })();
 
 /******************************Adding Content To Main Div Event Listener*******************************/
-
-let input = document.getElementById('input-section');
-input.addEventListener('keydown', function (e) {
-  if (e.key == 'Enter') {
-    let id = uid();
-    let value = input.value;
-    input.value = "";
-    createBox(id, value, 'black', true);
-    getAndAddToLocalStorage(id, 'black', value, false);
-  }
-})
 
 /**************************************Main Container Event Listener********************************* */
 
@@ -96,7 +112,7 @@ lockContainer.addEventListener('click', function (e) {
   console.log(lockContainer.classList);
   lockContainer.classList.add('boxShadow');
   unlockContainer.classList.remove('boxShadow');
-})
+});
 
 unlockContainer.addEventListener('click', function (e) {
   let textList = document.querySelectorAll('.text');
@@ -105,7 +121,7 @@ unlockContainer.addEventListener('click', function (e) {
   }
   lockContainer.classList.remove('boxShadow');
   unlockContainer.classList.add('boxShadow');
-})
+});
 
 
 /***********************Creating The Inner Html Fro Main Container***************************************/
@@ -152,41 +168,31 @@ function getAndAddToLocalStorage(id, color, value) {
 
 
 function createBox(id, value, color, flag) {
+  console.log('Times');
   console.log(value);
   let div = document.getElementsByClassName('main-container');
   let newDiv = document.createElement('div');
   newDiv.innerHTML = innerHtml(color);
-
-
+  
+  
   /******************************Adding Event Listener To Delete The Div****************************** */
-
-  newDiv.addEventListener('click', function () {
-    if (deleteMode === true) {
-      newDiv.remove();
-      let taskString = localStorage.getItem('tasks');
-      let tasksArr = JSON.parse(taskString);
-      let updatedArr = tasksArr.filter((ob) => {
-        return ob.id !== `#${id}`;
-      });
-      console.log(updatedArr);
-      updatedArr.length > 0 ? localStorage.setItem('tasks', JSON.stringify(updatedArr)) : localStorage.clear();
-    }
-  });
-
   div[0].appendChild(newDiv);
+  
+  deleteBox(newDiv)
+  updateText(newDiv);
+  
   let textDiv = document.getElementsByClassName('text');
   textDiv[textDiv.length - 1].textContent = value;
   let idDiv = document.getElementsByClassName('task-id');
   idDiv[idDiv.length - 1].textContent = flag ? `#${id}` : `${id}`;
-
-  if(flag==false){
-    let header=newDiv.querySelector('.task-header');
-    header.style.backgroundColor=color;
+  
+  if (flag == false) {
+    let header = newDiv.querySelector('.task-header');
+    header.style.backgroundColor = color;
   }
-
+  
 
 };
-
 
 function updateColorInLocalStorage(id, color) {
   console.log(color);
@@ -206,4 +212,39 @@ function updateColorInLocalStorage(id, color) {
   });
   console.log(updatedArr);
   localStorage.setItem('tasks', JSON.stringify(updatedArr));
+}
+
+
+
+function updateText(newDiv) {
+  newDiv.addEventListener('click', function (e) {
+    let textClass = e.target;
+    console.log(textClass);
+    textClass.addEventListener('blur', function () {
+      let id = textClass.previousElementSibling.textContent;
+      let taskArr = JSON.parse(localStorage.getItem('tasks'));
+      for (let i = 0; i < taskArr.length; i++) {
+        if (taskArr[i].id === id) {
+          taskArr[i].value = textClass.textContent;
+          break;
+        }
+      }
+      localStorage.setItem('tasks', JSON.stringify(taskArr));
+    });
+  });
+}
+
+function deleteBox(newDiv) {
+  newDiv.addEventListener('click', function () {
+    if (deleteMode === true) {
+      newDiv.remove();
+      let taskString = localStorage.getItem('tasks');
+      let tasksArr = JSON.parse(taskString);
+      let updatedArr = tasksArr.filter((ob) => {
+        return ob.id !== `#${id}`;
+      });
+      console.log(updatedArr);
+      updatedArr.length > 0 ? localStorage.setItem('tasks', JSON.stringify(updatedArr)) : localStorage.clear();
+    }
+  });
 }

@@ -1,5 +1,4 @@
 body {
-  /* border: 2px solid red; */
   margin: 0px;
   font-family: 'Courier New', Courier, monospace;
 }
@@ -59,7 +58,6 @@ align-items: center;
   height: 20%;
   width: 20%;
   border: 2px solid black;
-  /* border-radius: 1rem; */
   color: black;
   font-size: large;
   font-weight:bold;
@@ -94,17 +92,6 @@ align-items: center;
   color: white;
 }
 
-#input-section{
-  background-color: white;
-  margin-left: 1rem;
-  font-size: 1rem;
-}
-
-/* .task-container{
-background-color: white;
-height: 8rem;
-width: 13rem;
-} */
 
 .task-header{
   height: 0.5rem;
@@ -115,10 +102,10 @@ width: 13rem;
   color: cadetblue;
   margin: 5px;
 }
-.text{
+/* .text{
   text-align: center;
   margin-top: 1.2rem;
-}
+} */
 
 .active{
   display: flex;
@@ -130,4 +117,48 @@ width: 13rem;
 
 .boxShadow{
   box-shadow: rgba(64, 155, 135, 0.1) 0px 8px 24px, rgba(196, 196, 212, 0.1) 0px 16px 56px, rgba(199, 124, 27, 0.1) 0px 24px 80px;
+}
+
+
+.modale{
+  height: 15rem;
+  width: 30rem;
+  /* border: 2px solid black; */
+  border: none;
+  display: flex;
+  position: fixed;
+  top: 50%-(15/2)rem;
+  left: 50%-(30/2)rem;
+  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+  display: none;
+}
+
+#input-section{
+  box-sizing: border-box;
+  height: 100%;
+  width: 70%;
+  /* border: 2px solid red; */
+  background-color: white;
+  padding-top: 2rem;
+  padding-left: 2rem;
+  font-size: x-large;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+}
+
+.colorArea{
+ height: 100%;
+ width: 30%;
+ /* border: 2px solid green; */
+ background-color: rgb(71, 67, 67);
+ flex-direction: column;
+ display: flex;
+ justify-content: space-around;
+ align-items: center;
+}
+
+
+.cColor{
+  height: 20%;
+  width: 50%;
 }
