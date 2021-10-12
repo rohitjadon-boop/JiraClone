@@ -13,27 +13,27 @@ let plusContainer = document.querySelector('.plus-container');
 let deleteContainer = document.querySelector('.multiply-container');
 let modale = document.querySelector('.modale');
 
-modale.addEventListener('keydown', function(e) {
-  if(e.key==='Enter'){
-    let value=e.target.value;
-    e.target.value="";
-    let id=uid();
+modale.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    let value = e.target.value;
+    e.target.value = "";
+    let id = uid();
     console.log(id);
     createBox(id, value, 'black', true);
     getAndAddToLocalStorage(id, 'black', value);
-    modale.style.display='none';
-    modaleFlag=false;
+    modale.style.display = 'none';
+    modaleFlag = false;
   }
 })
 
 plusContainer.addEventListener('click', function (e) {
-  if(modaleFlag==false){
-    modale.style.display='flex';
-    modaleFlag=true;
+  if (modaleFlag == false) {
+    modale.style.display = 'flex';
+    modaleFlag = true;
   }
-  else{
-   modale.style.display='none';
-   modaleFlag=false;
+  else {
+    modale.style.display = 'none';
+    modaleFlag = false;
   }
 });
 
@@ -44,6 +44,7 @@ function init() {
   console.log(currentData.length);
   for (let i = 0; i < currentData.length; i++) {
     createBox(currentData[i].id, currentData[i].value, currentData[i].color, false);
+    console.log(currentData[i].id);
   }
 };
 
@@ -174,24 +175,24 @@ function createBox(id, value, color, flag) {
   let div = document.getElementsByClassName('main-container');
   let newDiv = document.createElement('div');
   newDiv.innerHTML = innerHtml(color);
-  
-  
-/******************************Adding Event Listener To Delete The Div****************************** */
+
+
+  /******************************Adding Event Listener To Delete The Div****************************** */
   div[0].appendChild(newDiv);
-  
-  deleteBox(newDiv)
+
+  deleteBox(newDiv, id, flag)
   updateText(newDiv);
-  
+
   let textDiv = document.getElementsByClassName('text');
   textDiv[textDiv.length - 1].textContent = value;
   let idDiv = document.getElementsByClassName('task-id');
   idDiv[idDiv.length - 1].textContent = flag ? `#${id}` : `${id}`;
-  
+
   if (flag == false) {
     let header = newDiv.querySelector('.task-header');
     header.style.backgroundColor = color;
   }
-  
+
 
 };
 
@@ -239,14 +240,16 @@ function updateText(newDiv) {
 
 /*************************************Function TO Delete The Box****************************************** */
 
-function deleteBox(newDiv) {
+function deleteBox(newDiv, id, flag) {
+  id = flag == false ? id : `#${id}`;
+  console.log(id);
   newDiv.addEventListener('click', function () {
     if (deleteMode === true) {
       newDiv.remove();
       let taskString = localStorage.getItem('tasks');
       let tasksArr = JSON.parse(taskString);
       let updatedArr = tasksArr.filter((ob) => {
-        return ob.id !== `#${id}`;
+        return ob.id !== id;
       });
       console.log(updatedArr);
       updatedArr.length > 0 ? localStorage.setItem('tasks', JSON.stringify(updatedArr)) : localStorage.clear();
