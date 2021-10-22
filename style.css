@@ -53,6 +53,7 @@ align-items: center;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    overflow-y: scroll;
 }
 .main-container>*{
   height: 20%;
@@ -102,10 +103,6 @@ align-items: center;
   color: cadetblue;
   margin: 5px;
 }
-/* .text{
-  text-align: center;
-  margin-top: 1.2rem;
-} */
 
 .active{
   display: flex;
@@ -161,4 +158,11 @@ align-items: center;
 .cColor{
   height: 20%;
   width: 50%;
+}
+
+
+@media only screen and (max-width: 600px){
+  html{
+    font-size: small;
+  }
 }

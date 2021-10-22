@@ -3,6 +3,10 @@ let deleteMode = false;
 let modaleFlag = false;
 /**************************************Creating Unique Id Using ShortUniueId***********************/
 
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+})
+
 var uid = new ShortUniqueId();
 
 /***********************Add Cross Container  Box Selectors*****************************************/
@@ -24,7 +28,7 @@ modale.addEventListener('keydown', function (e) {
     modale.style.display = 'none';
     modaleFlag = false;
   }
-})
+});
 
 plusContainer.addEventListener('click', function (e) {
   if (modaleFlag == false) {
@@ -132,7 +136,7 @@ function innerHtml() {
 <div class="task-header"></div>
 <div class="task-main-container">
   <div class="task-id"></div>
-  <div class="text" contentEditable='false'></div>
+  <div class="text" contentEditable ='false'></div>
 </div>
 </div>`
 }
@@ -151,7 +155,7 @@ deleteContainer.addEventListener('click', function (e) {
 })
 
 
-/******************************Adding TO Local Storage**************************************************** */
+/******************************Adding To Local Storage**************************************************** */
 
 
 function getAndAddToLocalStorage(id, color, value) {
@@ -170,7 +174,6 @@ function getAndAddToLocalStorage(id, color, value) {
 /*****************************Creating The Box****************************************************** */
 
 function createBox(id, value, color, flag) {
-  console.log('Times');
   console.log(value);
   let div = document.getElementsByClassName('main-container');
   let newDiv = document.createElement('div');
